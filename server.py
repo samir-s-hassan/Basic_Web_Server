@@ -2,7 +2,7 @@ import mimetypes #This is to find the content type of the file
 import socket
 import os
 
-# Server settings: localhost and port 8080
+# Server settings: localhost and specified port 8080
 HOST = '127.0.0.1'
 PORT = 8080
 
