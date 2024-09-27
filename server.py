@@ -1,10 +1,11 @@
-import mimetypes #This is to find the content type of the file
+import mimetypes  # This is to find the content type of the file
 import socket
 import os
 
 # Server settings: localhost and specified port 8080
 HOST = '127.0.0.1'
 PORT = 8080
+TIMEOUT = 10  # 10-second timeout for each client connection
 
 # Directory to serve files from
 STATIC_DIR = './static'
@@ -12,6 +13,9 @@ STATIC_DIR = './static'
 # Handles the client requests
 def handle_request(client_socket):
     try:
+        # Set timeout for client socket
+        client_socket.settimeout(TIMEOUT)
+
         # Receive and decode the request
         request = client_socket.recv(1024).decode('utf-8')
         headers = request.splitlines()
@@ -21,23 +25,23 @@ def handle_request(client_socket):
             print(f"Request: {headers[0]}")
 
         # Parse the request line
-        method, url, _ = headers[0].split() #Headers[0] here
+        method, url, _ = headers[0].split()  # Headers[0] here
         status_code = ''
         content_type = ''
 
         if method == 'GET':
             # Determine the file to serve (index.html for root)
             file_path = STATIC_DIR + (url if url != '/' else '/index.html')
-            
+
             # Serve the file if it exists, otherwise return 404
             if os.path.exists(file_path):
                 # Get the MIME type based on the file extension
                 content_type, _ = mimetypes.guess_type(file_path)
-                
+
                 # Default to text/html if no MIME type is found
                 if content_type is None:
                     content_type = 'text/html'
-                
+
                 with open(file_path, 'rb') as file:
                     response_body = file.read()
                     response_headers = 'HTTP/1.1 200 OK\r\n'
@@ -47,18 +51,22 @@ def handle_request(client_socket):
             else:
                 # Set the path of the 404 html page we will serve
                 error_404_page = STATIC_DIR + '/404.html'
-                with open(error_404_page, 'rb') as file:
-                    response_body = file.read()
-                    # Set content type explicitly for 404 response
+                if os.path.exists(error_404_page):
+                    with open(error_404_page, 'rb') as file:
+                        response_body = file.read()
+                        content_type = 'text/html'
+                else:
+                    # Fallback if 404.html does not exist
+                    response_body = b'<html><body><h1>404 Not Found</h1></body></html>'
                     content_type = 'text/html'
-                response_body = b'<html><body><h1>404 Not Found</h1></body></html>'
+                
                 response_headers = 'HTTP/1.1 404 Not Found\r\n'
                 response_headers += f'Content-Type: {content_type}\r\n\r\n'
                 status_code = '404 Not Found'
-            
+
             # Send the response
             client_socket.send(response_headers.encode('utf-8') + response_body)
-        
+
         else:
             # Handle unsupported methods (e.g., POST)
             response_body = b'<html><body><h1>405 Method Not Allowed</h1></body></html>'
@@ -67,14 +75,19 @@ def handle_request(client_socket):
             response_headers += f'Content-Type: {content_type}\r\n\r\n'
             status_code = '405 Method Not Allowed'
             client_socket.send(response_headers.encode('utf-8') + response_body)
-    
+
         # Log the request method, URL, response status, and content type
         print(f"Method: {method}, URL: {url}, Status: {status_code}, Content-Type: {content_type}")
+
+    except socket.timeout:
+        # Handle a timeout exception
+        print(f"Connection timed out for client {client_socket.getpeername()}")
+        client_socket.send(b'HTTP/1.1 408 Request Timeout\r\n\r\n')
     
     except Exception as e:
-        # Print any errors that occur
+        # Print any other errors that occur
         print(f"Error: {e}")
-    
+
     finally:
         # Close the connection
         client_socket.close()
