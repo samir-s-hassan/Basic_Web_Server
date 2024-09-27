@@ -45,11 +45,14 @@ def handle_request(client_socket):
                     response_headers += f'Content-Type: {content_type}\r\n\r\n'
                     status_code = '200 OK'
             else:
-                # Set content type explicitly for 404 response
+                # Set the path of the 404 html page we will serve
+                error_404_page = STATIC_DIR + '/404.html'
+                with open(error_404_page, 'rb') as file:
+                    response_body = file.read()
+                    # Set content type explicitly for 404 response
+                    content_type = 'text/html'
                 response_body = b'<html><body><h1>404 Not Found</h1></body></html>'
                 response_headers = 'HTTP/1.1 404 Not Found\r\n'
-                # Explicitly set content type for 404 page because if the file path doesn't exist, we never looked for it 
-                content_type = 'text/html'  
                 response_headers += f'Content-Type: {content_type}\r\n\r\n'
                 status_code = '404 Not Found'
             

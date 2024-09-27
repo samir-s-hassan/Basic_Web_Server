@@ -1,0 +1,9 @@
+{
+    "title": "Simple Web Server",
+    "description": "This is an example JSON file served by the Python web server.",
+    "items": [
+        { "id": 1, "name": "Samir" },
+        { "id": 2, "name": "Sharafi" },
+        { "id": 3, "name": "Hassan" }
+    ]
+}

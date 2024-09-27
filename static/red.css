@@ -1,0 +1,18 @@
+body {
+    background-color: red;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: black;
+}
+
+p {
+    font-size: 16px;
+    color: #333;
+}
+
+a {
+    color: blue;
+    text-decoration: none;
+}
