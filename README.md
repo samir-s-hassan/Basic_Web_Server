@@ -9,8 +9,11 @@
     - Handle timeouts  
 
 ## Now, how to use and test my web server:  
+  
     1. Make sure you have python or python3 installed (I personally have/used python3). You can check using "python --version" or "python3 --version"  
-    2. Now, go to your web browser or any HTTP client. I prefer the web browser for this and recommend it  
+      
+    2. Now, go to your web browser or any HTTP client. I prefer the web browser for this and recommend it
+        
     3. To test our web server amongst the different requests, here are all the links you should enter on your web browser:  
     http://localhost:8080/  
     http://localhost:8080/examples.json  
@@ -22,11 +25,18 @@
     http://localhost:8080/qowir8uqidjasd  
     http://localhost:8080/jfksdkjfhaksjdhfkjasdhf  
     http://localhost:8080/thisisdefinetelynotapagethatexists  
-    4. You should notice that the web server accurately serves the right file when it exists and WHEN IT DOESN'T, it defaults to the 404 Not Found page. And when we are at our home page/root, we are always at index.html  
-    5. In a similar manner, visiting /index.html and /404.html will also serve those exact pages as our web server checks and sees they exist so they accurately serve it  
+        
+    4. You should notice that the web server accurately serves the right file when it exists and WHEN IT DOESN'T, it defaults to the 404 Not Found page. And when we are at our /, we are always at index.html
+        
+    5. In a similar manner, visiting /index.html and /404.html will also serve those exact pages as our web server checks and sees they exist so they accurately serve it
+        
     6. Lastly, to check our server can handle timeouts, open a separate terminal tab while having the server running in your other terminal tab  
-    7. Make sure you have telnet installed. You can check using "telnet --version"
-    8. Connect to our server through the command "telnet localhost 8080"  
-    9. Do not type anything and since our server is coded to time-out after 10 seconds, you'll notice this is exactly what happens  
+        
+    7. Make sure you have telnet installed. You can check using "telnet --version"  
+             
+    8. Connect to our server through the command "telnet localhost 8080"    
+      
+    9. Do not type anything and since our server is coded to time-out after 10 seconds, you'll notice this is exactly what happens    
+      
     10. This is our web server!
 
