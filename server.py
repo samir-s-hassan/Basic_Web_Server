@@ -56,7 +56,7 @@ def handle_request(client_socket):
                         response_body = file.read()
                         content_type = 'text/html'
                 else:
-                    # Fallback if 404.html does not exist
+                    # Fallback if 404.html (and conveniently index.html) does not exist
                     response_body = b'<html><body><h1>404 Not Found</h1></body></html>'
                     content_type = 'text/html'
                 
