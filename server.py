@@ -33,10 +33,12 @@ def handle_request(client_socket):
                     response_headers = 'HTTP/1.1 200 OK\r\n'
                     response_headers += f'Content-Length: {len(response_body)}\r\n'
                     response_headers += 'Content-Type: text/html\r\n\r\n'
+                    status_code = '200 OK'
             else:
                 response_body = b'<html><body><h1>404 Not Found</h1></body></html>'
                 response_headers = 'HTTP/1.1 404 Not Found\r\n'
                 response_headers += 'Content-Type: text/html\r\n\r\n'
+                status_code = '404 Not Found'
             
             # Send the response
             client_socket.send(response_headers.encode('utf-8') + response_body)
@@ -46,7 +48,11 @@ def handle_request(client_socket):
             response_body = b'<html><body><h1>405 Method Not Allowed</h1></body></html>'
             response_headers = 'HTTP/1.1 405 Method Not Allowed\r\n'
             response_headers += 'Content-Type: text/html\r\n\r\n'
+            status_code = '405 Method Not Allowed'
             client_socket.send(response_headers.encode('utf-8') + response_body)
+    
+        # Log the request method, URL, and response status
+        print(f"Method: {method}, URL: {url}, Status: {status_code}")
     
     except Exception as e:
         # Print any errors that occur
@@ -55,7 +61,6 @@ def handle_request(client_socket):
     finally:
         # Close the connection
         client_socket.close()
-
 # Starts the server and listens for connections
 def start_server():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
@@ -67,6 +72,7 @@ def start_server():
         # Main loop to accept and handle client connections
         while True:
             client_socket, addr = server_socket.accept()
+            print(f"---------------------------------------------------------")
             print(f"Connection from {addr}")
             handle_request(client_socket)
 
